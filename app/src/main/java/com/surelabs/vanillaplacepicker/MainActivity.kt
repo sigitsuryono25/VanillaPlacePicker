@@ -3,11 +3,10 @@ package com.surelabs.vanillaplacepicker
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.vanillaplacepicker.presentation.builder.VanillaPlacePicker
 import com.vanillaplacepicker.utils.MapType
-import com.vanillaplacepicker.utils.PickerLanguage
 import com.vanillaplacepicker.utils.PickerType
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -35,13 +34,22 @@ class MainActivity : AppCompatActivity() {
             when (requestCode) {
                 1052 -> {
                     val vanillaAddress = VanillaPlacePicker.onActivityResult(data)
-                    Toast.makeText(
-                        this@MainActivity,
-                        vanillaAddress?.formattedAddress,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    setToImageView(vanillaAddress?.latitude, vanillaAddress?.longitude)
                 }
             }
         }
+    }
+
+    private fun setToImageView(latitude: Double?, longitude: Double?) {
+        val key = getString(R.string.google_key)
+        val imageMapsStatic = "http://maps.googleapis.com/maps/api/" +
+                "staticmap?zoom=15&" +
+                "size=2000x320&" +
+                "markers=icon:http://illegal-trade.server411.tech/assets/map-marker-alt-solid.svg" +
+                "|$latitude,$longitude&" +
+                "key=$key"
+        Glide.with(this)
+            .load(imageMapsStatic)
+            .into(imageMaps)
     }
 }
